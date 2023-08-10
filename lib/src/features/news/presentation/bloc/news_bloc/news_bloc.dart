@@ -41,7 +41,7 @@ Future<List<Articles>> fetchAndCacheArticleList(
   } else {
     print('=================== GET FROM REMOTE =============');
     final articlesList = await NewsRemoteService().getArticlesFromApi();
-    // NewsLocalService.saveArticleListToCache(articlesList);
+    NewsLocalService.saveArticleListToCache(articlesList);
     return articlesList;
   }
 }

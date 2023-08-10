@@ -75,7 +75,7 @@ class HomePage extends StatelessWidget {
                           ? const NotConnected()
                           : Container(),
                       // List articles
-                      ListView.separated(
+                      newsState.articles.isNotEmpty ? ListView.separated(
                         separatorBuilder: (context, index){
                           return const Divider();
                         },
@@ -85,13 +85,13 @@ class HomePage extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return NewsItem(article: newsState.articles[index]);
                         },
-                      ),
+                      ) : const Center(child: Text('Aucune donnée')),
                     ],
                   ),
               )
               : newsState is NewsError
                   ? const ErrorMessage()
-                  : Container(),
+                  : const Center(child: CircularProgressIndicator()),
         );
       }),
     );
