@@ -8,29 +8,26 @@ class NewsLocalService {
   static const _cacheKey = 'news_cache_key';
 
   static Future<void> saveArticleListToCache(List<Articles> articles) async {
-    
+
     final List<Map<String, dynamic>> articleMapList = articles.map((article) => article.toJson()).toList();
     final jsonEncoded = json.encode(articleMapList);
-   
     await DefaultCacheManager().putFile(_cacheKey, Uint8List.fromList(utf8.encode(jsonEncoded)));
-    
-    for (var article in articles) {
+    var nbrNewFromCash = articles.length >= 20 ? 20 :articles.length;
+    for (var i = 0; i < nbrNewFromCash; i++) {
       try {
-        if (article.urlToImage !=null) {
-        final imageData = await NetworkAssetBundle(Uri.parse(article.urlToImage?? "")).load(article.urlToImage??"");
-        final imageBytes = imageData.buffer.asUint8List();
-        var fl = await DefaultCacheManager().putFile(article.urlToImage??"", imageBytes);
-        // print('=================111222333${fl}');
-      }
+        if (articles[i].urlToImage !=null) {
+          final imageData = await NetworkAssetBundle(Uri.parse(articles[i].urlToImage?? "")).load("");
+          final imageBytes = imageData.buffer.asUint8List();
+          await DefaultCacheManager().putFile(articles[i].urlToImage??"", imageBytes);
+        }
       } catch (e) {
-        print('=======EERRORR $e');
+        // rethrow;
       }
     }
   }
 
   static Future<List<Articles>> getArticleListFromCache() async {
     final file = await DefaultCacheManager().getFileFromCache(_cacheKey);
-
     if (file != null) {
       final jsonEncoded = await file.file.readAsString();
       final List<dynamic> articlesMapList = json.decode(jsonEncoded);
@@ -38,13 +35,11 @@ class NewsLocalService {
       for (var article in articles) {
         try {
           final imageFile = await DefaultCacheManager().getSingleFile(article.urlToImage?? "");
-          // print('==============GET =>>> $imageFile');
-          article.urlToImage = imageFile.path;
+          article.imageFile = imageFile;
         } catch (e) {
-         //  print('=======EERRORR $e');
+         // rethrow;
         }
       }
-      
       return articles.cast<Articles>();
     }
 

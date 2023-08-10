@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gallery_cache/src/features/news/presentation/bloc/news_bloc/news_bloc.dart';
 import 'package:flutter_gallery_cache/src/features/news/presentation/widgets/news_item.dart';
-
 import '../../../../constants/colors/app_colors.dart';
 import '../widgets/error.dart';
 import '../widgets/not_connected.dart';
@@ -61,7 +60,7 @@ class HomePage extends StatelessWidget {
         ),
       ),
       body: BlocBuilder<NewsBloc, NewsState>(builder: (context, newsState) {
-        print(newsState);
+        // print(newsState);
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: newsState is NewsLoaded

@@ -19,12 +19,8 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
       emit(NewsLoading());
       // check connectivity
       try {
-        final List<Articles> articles =
-            await fetchAndCacheArticleList(connectivityResult);
-        emit(NewsLoaded(
-            articles: articles,
-            isCachedData:
-                connectivityResult == ConnectivityResult.none ? true : false));
+        final List<Articles> articles =await fetchAndCacheArticleList(connectivityResult);
+        emit(NewsLoaded(articles: articles, isCachedData: connectivityResult == ConnectivityResult.none ? true : false));
       } catch (e) {
         emit(const NewsError(message: 'Une erreur est survenue !'));
       }
@@ -32,12 +28,10 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   }
 }
 
-Future<List<Articles>> fetchAndCacheArticleList(
-    ConnectivityResult connectivityResult) async {
+Future<List<Articles>> fetchAndCacheArticleList(ConnectivityResult connectivityResult) async {
   if (connectivityResult == ConnectivityResult.none) {
     print('=================== GET FROM LOCAL ===============');
-    var rt = await NewsLocalService.getArticleListFromCache();
-    return rt;
+    return await NewsLocalService.getArticleListFromCache();
   } else {
     print('=================== GET FROM REMOTE =============');
     final articlesList = await NewsRemoteService().getArticlesFromApi();

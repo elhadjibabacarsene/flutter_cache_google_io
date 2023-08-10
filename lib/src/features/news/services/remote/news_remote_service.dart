@@ -8,9 +8,7 @@ class NewsRemoteService {
 
   Future<List<Articles>> getArticlesFromApi() async {
     final response = await http.get(Uri.parse(url));
-    print(response.body.toString());
     if (response.statusCode == 200) {
-
       final newsNodel = NewsModel.fromJson(jsonDecode(response.body));
       return newsNodel.articles ?? [];
     } else {

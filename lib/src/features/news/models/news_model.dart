@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class NewsModel {
   String? status;
   int? totalResults;
@@ -36,6 +38,7 @@ class Articles {
   String? urlToImage;
   String? publishedAt;
   String? content;
+  File? imageFile;
 
   Articles(
       {this.source,
