@@ -32,14 +32,14 @@ class NewsLocalService {
       final jsonEncoded = await file.file.readAsString();
       final List<dynamic> articlesMapList = json.decode(jsonEncoded);
       final articles = articlesMapList.map((map) => Articles.fromJson(map)).toList();
-      for (var article in articles) {
+      /*for (var article in articles) {
         try {
           final imageFile = await DefaultCacheManager().getSingleFile(article.urlToImage?? "");
           article.imageFile = imageFile;
         } catch (e) {
-         // rethrow;
+         print(e);
         }
-      }
+      }*/
       return articles.cast<Articles>();
     }
 
