@@ -12,18 +12,6 @@ class NewsLocalService {
     final List<Map<String, dynamic>> articleMapList = articles.map((article) => article.toJson()).toList();
     final jsonEncoded = json.encode(articleMapList);
     await DefaultCacheManager().putFile(_cacheKey, Uint8List.fromList(utf8.encode(jsonEncoded)));
-    var nbrNewFromCash = articles.length >= 20 ? 20 :articles.length;
-    for (var i = 0; i < nbrNewFromCash; i++) {
-      try {
-        if (articles[i].urlToImage !=null) {
-          final imageData = await NetworkAssetBundle(Uri.parse(articles[i].urlToImage?? "")).load("");
-          final imageBytes = imageData.buffer.asUint8List();
-          await DefaultCacheManager().putFile(articles[i].urlToImage??"", imageBytes);
-        }
-      } catch (e) {
-        // rethrow;
-      }
-    }
   }
 
   static Future<List<Articles>> getArticleListFromCache() async {
@@ -32,17 +20,8 @@ class NewsLocalService {
       final jsonEncoded = await file.file.readAsString();
       final List<dynamic> articlesMapList = json.decode(jsonEncoded);
       final articles = articlesMapList.map((map) => Articles.fromJson(map)).toList();
-      for (var article in articles) {
-        try {
-          final imageFile = await DefaultCacheManager().getSingleFile(article.urlToImage?? "");
-          article.imageFile = imageFile;
-        } catch (e) {
-         // rethrow;
-        }
-      }
       return articles.cast<Articles>();
     }
-
     return [];
   }
 

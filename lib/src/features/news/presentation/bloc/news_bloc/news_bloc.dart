@@ -7,9 +7,7 @@ import 'package:equatable/equatable.dart';
 import '../../../models/news_model.dart';
 import '../../../services/local/news_local_service.dart';
 import '../../../services/remote/news_remote_service.dart';
-
 part 'news_event.dart';
-
 part 'news_state.dart';
 
 class NewsBloc extends Bloc<NewsEvent, NewsState> {
@@ -17,7 +15,6 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
     on<GetNews>((event, emit) async {
       final connectivityResult = await (Connectivity().checkConnectivity());
       emit(NewsLoading());
-      // check connectivity
       try {
         final List<Articles> articles =await fetchAndCacheArticleList(connectivityResult);
         emit(NewsLoaded(articles: articles, isCachedData: connectivityResult == ConnectivityResult.none ? true : false));

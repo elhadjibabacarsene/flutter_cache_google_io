@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -9,8 +8,9 @@ import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NewsItem extends StatelessWidget {
-  const NewsItem({super.key, required this.article});
+  const NewsItem({super.key, required this.article, required this.isCachedData});
   final Articles article;
+  final bool isCachedData;
 
   @override
   Widget build(BuildContext context) {
@@ -27,27 +27,33 @@ class NewsItem extends StatelessWidget {
       leading: SizedBox(
         width: 100,
         height: 100,
-        child: article.imageFile != null ? 
-        Image.file(article.imageFile!,
-          errorBuilder: (context, error, stackTrace) {
-            return Image.asset('assets/images/default_img.webp');
+        child: FutureBuilder(
+          future: buildImage(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data!;
+            }else{
+              return Image.asset('assets/images/default_img.webp');
+            }
           },
-        ) : article.urlToImage!=null ? 
-        CachedNetworkImage(
-        imageUrl:article.urlToImage!,
-        placeholder: (context, url) => SizedBox(
-          width: 100.0,
-          height: 100.0,
-          child: Shimmer.fromColors(
-            baseColor: Colors.red,
-            highlightColor: Colors.yellow,
-            child: const SizedBox(width: 100.0, height: 100.0),
-          ),
-        ),
-        errorWidget: (context, url, error) => Image.asset('assets/images/default_img.webp'),
-        ) : 
-        Image.asset('assets/images/default_img.webp'),
+        )
       ),
+    );
+  }
+
+  Future<Widget> buildImage() async {
+    if (isCachedData) {
+      final imageFile = await DefaultCacheManager().getSingleFile(article.urlToImage?? "");
+      return Image.file(imageFile,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset('assets/images/default_img.webp');
+        },
+      );
+    }
+    return Image.network(article.urlToImage?? "",
+      errorBuilder: (context, error, stackTrace) {
+        return Image.asset('assets/images/default_img.webp');
+      },
     );
   }
 }

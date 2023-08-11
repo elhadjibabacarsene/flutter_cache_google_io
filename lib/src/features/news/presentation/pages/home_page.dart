@@ -82,7 +82,7 @@ class HomePage extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         itemCount: newsState.articles.length,
                         itemBuilder: (context, index) {
-                          return NewsItem(article: newsState.articles[index]);
+                          return NewsItem(article: newsState.articles[index], isCachedData: newsState.isCachedData);
                         },
                       ) : const Center(child: Text('Aucune donnée')),
                     ],
