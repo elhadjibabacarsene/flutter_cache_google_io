@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gallery_cache/src/features/news/presentation/bloc/news_bloc/news_bloc.dart';
 import 'package:flutter_gallery_cache/src/features/news/presentation/pages/home_page.dart';
 
 
@@ -13,11 +12,23 @@ class GalleryApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BlocProvider(
-        create: (_) => NewsBloc()..add(GetNews()), child: const HomePage(),
-      ),
+      home:  HomePage(),
     );
   }
 }
+
+
+
+/*Future<List<Articles>> fetchAndCacheArticleList(ConnectivityResult connectivityResult) async {
+  if (connectivityResult == ConnectivityResult.none) {
+    print('=================== GET FROM LOCAL ===============');
+    return await NewsLocalService.getArticleListFromCache();
+  } else {
+    print('=================== GET FROM REMOTE =============');
+    final articlesList = await NewsRemoteService().getArticlesFromApi();
+    NewsLocalService.saveArticleListToCache(articlesList);
+    return articlesList;
+  }
+}*/
