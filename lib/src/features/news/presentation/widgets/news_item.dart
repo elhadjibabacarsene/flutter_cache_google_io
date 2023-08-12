@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gallery_cache/src/constants/colors/app_colors.dart';
 import 'package:flutter_gallery_cache/src/features/news/models/news_model.dart';
@@ -50,10 +51,20 @@ class NewsItem extends StatelessWidget {
         },
       );
     }
+    saveImageFromCash();
     return Image.network(article.urlToImage?? "",
       errorBuilder: (context, error, stackTrace) {
         return Image.asset('assets/images/default_img.webp');
       },
     );
+  }
+
+  saveImageFromCash() async {
+    try {
+      final imageData = await NetworkAssetBundle(Uri.parse(article.urlToImage?? "")).load(article.urlToImage?? "");
+      final imageBytes = imageData.buffer.asUint8List();
+      DefaultCacheManager().putFile(article.urlToImage?? "", imageBytes);
+    // ignore: empty_catches
+    } catch (e) {}
   }
 }
