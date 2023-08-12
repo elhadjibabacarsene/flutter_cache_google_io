@@ -47,14 +47,14 @@ class NewsItem extends StatelessWidget {
       final imageFile = await DefaultCacheManager().getSingleFile(article.urlToImage?? "");
       return Image.file(imageFile,
         errorBuilder: (context, error, stackTrace) {
-          return Image.asset('assets/images/default_img.webp');
+          return Image.asset('assets/images/default_img.webp', fit: BoxFit.cover,);
         },
       );
     }
     saveImageFromCash();
-    return Image.network(article.urlToImage?? "",
+    return Image.network(article.urlToImage?? "", fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
-        return Image.asset('assets/images/default_img.webp');
+        return Image.asset('assets/images/default_img.webp', fit: BoxFit.cover,);
       },
     );
   }
